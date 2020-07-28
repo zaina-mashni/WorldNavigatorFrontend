@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="row" style="margin-top: 50px; margin-bottom: 100px;">
+    <div class="col-lg-5" style="margin: 0 auto;">
+      <div class="card" >
+        <p class="text-center" style="font-size: 28px; font-weight: bold; margin: 28px;">Join or Create a new world!</p>
+        <div class="card-body">
+          <table >
+            <tbody>
+            <tr *ngFor="let game of gameInfo">
+              <td>
+                <div class="table-row">
+                <h3>{{game.worldName}}</h3><br>
+                  <span>{{game.playersJoined}}/{{game.playerCapacity}} {{game.adminName}}</span>
+                  <button class="btn btn-primary float-right" (click)="onJoin(game.worldName)">join</button>
+                </div>
+              </td>
+            </tr>
+            <hr>
+            <button class="btn-primary btn" (click)="onCreate()">Create new world!</button>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
