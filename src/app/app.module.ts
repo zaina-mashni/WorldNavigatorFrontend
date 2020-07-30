@@ -12,6 +12,7 @@ import {GameService} from './service/game.service';
 import { StartComponent, FormatTimePipe } from './start/start.component';
 import { CreateComponent } from './create/create.component';
 import { RegisterComponent } from './register/register.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { RegisterComponent } from './register/register.component';
     StartComponent,
     CreateComponent,
     FormatTimePipe,
-    RegisterComponent
+    RegisterComponent,
+    NavbarComponent
   ],
     imports: [
         BrowserModule,

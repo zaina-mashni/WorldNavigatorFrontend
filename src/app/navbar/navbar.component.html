@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <a class="navbar-brand" routerLink="/join">WN</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li *ngIf="!isLoggedIn" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" routerLink="/login">Login <span class="sr-only">(current)</span></a>
+      </li>
+      <li *ngIf="!isLoggedIn" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" routerLink="/register">Register</a>
+      </li>
+      <li *ngIf="isLoggedIn && !isJoined" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" routerLink="/create">Create</a>
+      </li>
+      <li *ngIf="isLoggedIn && !isJoined" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" routerLink="/join">Join</a>
+      </li>
+      <li *ngIf="isLoggedIn && isJoined" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" routerLink="/start">Play</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav">
+      <li *ngIf="isLoggedIn" class="nav-item" routerLinkActive="active">
+        <a style="cursor: pointer" class="nav-link" (click)="onLogout()">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>

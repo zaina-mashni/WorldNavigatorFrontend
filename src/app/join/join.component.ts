@@ -16,6 +16,8 @@ export class JoinComponent implements OnInit {
   constructor(private gameService: GameService, private authService: AuthenticationService, private router: Router) {
     if (!authService.isLoggedIn()) {
       router.navigate(['/login']);
+    } else if (authService.getCurrentUser().worldName !== '') {
+      router.navigate(['/start']);
     }
   }
 

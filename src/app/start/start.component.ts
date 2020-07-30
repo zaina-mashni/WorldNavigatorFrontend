@@ -162,6 +162,7 @@ export class StartComponent implements OnInit {
         isAdmin: false
       };
       this.authService.updateLocalStorage(player);
+      this.router.navigate(['/join']);
     });
   }
 }

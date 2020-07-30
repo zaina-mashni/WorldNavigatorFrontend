@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {ReplyInterface} from '../interface/reply.interface';
@@ -12,6 +12,7 @@ import {PlayerInterface} from '../interface/player.interface';
 })
 
 export class AuthenticationService {
+  @Output() getLoggedIn: EventEmitter<PlayerInterface> = new EventEmitter();
   constructor(private http: HttpClient,
               private router: Router) { }
 
@@ -26,21 +27,20 @@ export class AuthenticationService {
     return localStorage.getItem('WorldNavigator') !== null;
   }
 
-  Register(username: string, password: string) {
-    const request = {
-      username: username,
-      password: password
-    };
-    console.log(JSON.stringify(request));
-  //  return this.http.post<ReplyInterface<Register>>(environment.apiUrl + '/api/user/register', JSON.stringify(request)).pipe();
-  }
   logout() {
+    const request = {
+      username: this.getCurrentUser().username,
+      password: this.getCurrentUser().password
+    };
     localStorage.removeItem('WorldNavigator');
+    this.getLoggedIn.emit(undefined);
+    this.http.post<ReplyInterface<string>>(environment.apiUrl + '/api/auth/logout', JSON.stringify(request));
     this.router.navigate(['/login']);
   }
 
   onLogin(player: PlayerInterface) {
     localStorage.setItem('WorldNavigator', JSON.stringify(player));
+    this.getLoggedIn.emit(player);
   }
 
   getCurrentUser(): PlayerInterface {
