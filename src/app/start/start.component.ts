@@ -4,9 +4,7 @@ import {environment} from '../../environments/environment';
 import {GameService} from '../service/game.service';
 import * as SockJS from 'sockjs-client';
 import {Stomp} from '@stomp/stompjs';
-import {Queue} from 'queue-typescript';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {strict} from 'assert';
 import {Subscription, timer} from 'rxjs';
 import {PlayerInterface} from '../interface/player.interface';
 import {Router} from '@angular/router';
@@ -35,7 +33,10 @@ export class StartComponent implements OnInit {
   isPlaying = false;
 
 
-  constructor(private authService: AuthenticationService, private gameService: GameService, private formBuilder: FormBuilder, private router: Router) {
+  constructor(private authService: AuthenticationService,
+              private gameService: GameService,
+              private formBuilder: FormBuilder,
+              private router: Router) {
     this.commandForm = this.formBuilder.group({
       command: ['', [Validators.required]],
     });
@@ -91,7 +92,8 @@ export class StartComponent implements OnInit {
   }
 
   onStart() {
-    this.gameService.startGame(this.authService.getCurrentUser().username, this.authService.getCurrentUser().worldName).subscribe(result => {
+    this.gameService.startGame(this.authService.getCurrentUser().username,
+      this.authService.getCurrentUser().worldName).subscribe(result => {
       console.log(result);
     });
   }
@@ -104,7 +106,7 @@ export class StartComponent implements OnInit {
       newCommand = '> ' + command;
     }
     this.commandList.push(newCommand);
-    if (this.commandList.length > 12) {
+    if (this.commandList.length > 10) {
       this.commandList.shift();
     }
   }
@@ -126,8 +128,8 @@ export class StartComponent implements OnInit {
     if (this.fightCounter > 0 && this.isFighting) {
       this.fightCommand = command;
     }
-    if (this.fightCounter === 0 && this.isFighting ) {
-        command = this.getCorrectFightCommand(command);
+    if (this.fightCounter === 0 && this.isFighting) {
+      command = this.getCorrectFightCommand(command);
     }
     console.log(command);
     this.gameService.executeCommand(this.authService.getCurrentUser().username, command).subscribe(result => {
@@ -144,7 +146,8 @@ export class StartComponent implements OnInit {
   }
 
   onQuit() {
-    this.gameService.quitGame(this.authService.getCurrentUser().username,this.authService.getCurrentUser().worldName).subscribe(result => {
+    this.gameService.quitGame(this.authService.getCurrentUser().username,
+      this.authService.getCurrentUser().worldName).subscribe(result => {
       console.log(JSON.stringify(result));
       this.inventory = result.inventory;
       this.availableCommands = result.availableCommands;
@@ -166,6 +169,7 @@ export class StartComponent implements OnInit {
     });
   }
 }
+
 @Pipe({
   name: 'formatTime'
 })
