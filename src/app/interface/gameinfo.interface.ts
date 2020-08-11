@@ -3,4 +3,5 @@ export interface GameinfoInterface {
    playerCapacity: number;
    playersJoined: number;
    adminName: string;
+   started: boolean;
 }

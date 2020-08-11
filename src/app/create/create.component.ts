@@ -15,8 +15,12 @@ export class CreateComponent implements OnInit {
   createForm: FormGroup;
   mapFileChosen: string;
   mapFiles: string[] = [];
+  submitted = false;
+  result = '';
 
-  constructor(private formBuilder: FormBuilder, private gameService: GameService, private authService: AuthenticationService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private gameService: GameService,
+              private authService: AuthenticationService,
+              private router: Router) {
     this.createForm = this.formBuilder.group({
       worldName: ['', [Validators.required]],
       mapFile: ['', [Validators.required]],
@@ -34,20 +38,26 @@ export class CreateComponent implements OnInit {
   }
 
   onCreate(worldName: string) {
+    this.submitted = true;
     if (this.createForm.invalid) {
+      this.result = 'You must enter a name for the world and select a map.';
       return;
     }
     console.log(this.mapFileChosen);
     this.gameService.createGame(this.authService.getCurrentUser().username, worldName, this.mapFileChosen).subscribe(result => {
+      this.result = result.toString();
       console.log(result);
-      const player: PlayerInterface = {
-        username: this.authService.getCurrentUser().username,
-        password: this.authService.getCurrentUser().password,
-        worldName: worldName,
-        isAdmin: true
-      };
-      this.authService.updateLocalStorage(player);
-      this.router.navigate(['/start']);
+      if (result === 'World created successfully') {
+        const player: PlayerInterface = {
+          username: this.authService.getCurrentUser().username,
+          password: this.authService.getCurrentUser().password,
+          worldName: worldName,
+          isAdmin: true,
+          isPlaying: false
+        };
+        this.authService.updateLocalStorage(player);
+        this.router.navigate(['/start']);
+      }
     });
   }
 }

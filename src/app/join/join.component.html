@@ -6,17 +6,23 @@
         <div class="card-body">
           <table >
             <tbody>
-            <tr *ngFor="let game of gameInfo">
+            <tr *ngFor="let game of gameInfo; let i = index;">
               <td>
-                <div class="table-row">
-                <h3>{{game.worldName}}</h3><br>
-                  <span>{{game.playersJoined}}/{{game.playerCapacity}} {{game.adminName}}</span>
-                  <button class="btn btn-primary float-right" (click)="onJoin(game.worldName)">join</button>
+                <div class="table-row" style="margin-left: 20px;">
+                <h4 placement="left" ngbTooltip="World Name" triggers="hover">{{game.worldName}}</h4>
+                  <span>
+                    <span style="font-size: 10px" placement="left" ngbTooltip="Player Capacity" triggers="hover"><fa-icon [icon]="faUsers"></fa-icon> {{game.playersJoined}}/{{game.playerCapacity}}</span>
+                    <br>
+                    <span style="font-size: 10px" placement="left" ngbTooltip="Admin" triggers="hover"><fa-icon [icon]="faUser"></fa-icon> {{game.adminName}}</span>
+                  </span>
+                  <button class="btn btn-wn-inverted float-right" style="margin-top: -35px;" [disabled]="game.playersJoined==game.playerCapacity || game.started" (click)="onJoin(game.worldName)">join</button>
+                  <br>
+                  <hr *ngIf="i!=gameInfo.length-1">
                 </div>
               </td>
             </tr>
             <hr>
-            <button class="btn-primary btn" (click)="onCreate()">Create new world!</button>
+            <button class="btn btn-wn" style="margin-left: 95px;" (click)="onCreate()">Create new world!</button>
             </tbody>
           </table>
         </div>

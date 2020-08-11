@@ -9,7 +9,8 @@ import {AuthenticationService} from '../service/authentication.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-
+  submitted = false;
+  result = '';
   registerForm: FormGroup;
   constructor( private formBuilder: FormBuilder, private router: Router, private authService: AuthenticationService) {
     this.registerForm = this.formBuilder.group({
@@ -23,13 +24,17 @@ export class RegisterComponent implements OnInit {
   }
 
   onRegister(username: string, password: string, confirmPassword: string) {
+    this.submitted = true;
     if (this.registerForm.invalid) {
+      this.result = 'Username, password and confirm password can not be empty.';
       return;
     }
-    if(password !== confirmPassword){
+    if (password !== confirmPassword) {
+      this.result = 'Password and confirm Password should match.';
       return;
     }
     this.authService.register(username, password).subscribe(result => {
+      this.result = result.value;
       if (result.value === 'Registration successful') {
         this.router.navigate(['/login']);
       } else {

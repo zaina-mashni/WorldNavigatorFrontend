@@ -15,8 +15,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./start.component.css']
 })
 export class StartComponent implements OnInit {
-  isAdmin = false;
-  started = false;
   timeUp = false;
   inventory = '';
   commandList: string[] = [];
@@ -33,10 +31,11 @@ export class StartComponent implements OnInit {
   isPlaying = false;
 
 
-  constructor(private authService: AuthenticationService,
+  constructor(public authService: AuthenticationService,
               private gameService: GameService,
               private formBuilder: FormBuilder,
               private router: Router) {
+    console.log('in constructor');
     this.commandForm = this.formBuilder.group({
       command: ['', [Validators.required]],
     });
@@ -49,35 +48,54 @@ export class StartComponent implements OnInit {
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, (frame) => {
       stompClient.subscribe('/socket/start/' + this.authService.getCurrentUser().username, (result) => {
-        console.log(result.body);
+        console.log('in subscription: ' + result.body);
         const response = JSON.parse(result.body);
         this.inventory = response.inventory;
         this.availableCommands = response.availableCommands;
         this.facingDirection = response.facingDirection;
-        if (this.started === false) {
+        if (this.isPlaying === false) {
           this.counter = response.timeLeftInMinutes * 60;
         }
         this.isFighting = response.isFighting;
-        this.fightCounter = 7;
+        this.fightCounter = 10;
         this.fightCommand = '';
         this.isPlaying = response.isPlaying;
         if (this.isPlaying === false) {
           this.counter = 0;
         }
         this.addToList(response.message, false);
-        this.started = true;
+        const player: PlayerInterface = {
+          username: this.authService.getCurrentUser().username,
+          password: this.authService.getCurrentUser().password,
+          worldName: this.authService.getCurrentUser().worldName,
+          isAdmin: this.authService.getCurrentUser().isAdmin,
+          isPlaying: this.isPlaying
+        };
+        this.authService.updateLocalStorage(player);
       });
     });
   }
 
+
   ngOnInit(): void {
-    this.isAdmin = this.authService.getCurrentUser().isAdmin;
+    console.log('in ngoninit');
+    this.timeUp = false;
     this.countDown = timer(0, this.tick).subscribe(() => {
-      if (this.counter > 0 && this.started) {
+      if (this.counter > 0 && this.isPlaying) {
         --this.counter;
       }
-      if (this.counter === 0 && this.started) {
+      if (this.counter === 0 && this.isPlaying) {
+        console.log('in timeup');
         this.timeUp = true;
+        const player: PlayerInterface = {
+          username: this.authService.getCurrentUser().username,
+          password: this.authService.getCurrentUser().password,
+          worldName: '',
+          isAdmin: false,
+          isPlaying: false
+        };
+        this.gameService.getJoined.emit('');
+        this.authService.updateLocalStorage(player);
       }
     });
 
@@ -106,7 +124,7 @@ export class StartComponent implements OnInit {
       newCommand = '> ' + command;
     }
     this.commandList.push(newCommand);
-    if (this.commandList.length > 10) {
+    if (this.commandList.length > 17) {
       this.commandList.shift();
     }
   }
@@ -162,7 +180,23 @@ export class StartComponent implements OnInit {
         username: this.authService.getCurrentUser().username,
         password: this.authService.getCurrentUser().password,
         worldName: '',
-        isAdmin: false
+        isAdmin: false,
+        isPlaying: false
+      };
+      this.authService.updateLocalStorage(player);
+      this.router.navigate(['/join']);
+    });
+  }
+
+  unJoin() {
+    this.gameService.unJoinGame(this.authService.getCurrentUser().username,this.authService.getCurrentUser().worldName).subscribe(result => {
+      console.log(result);
+      const player: PlayerInterface = {
+        username: this.authService.getCurrentUser().username,
+        password: this.authService.getCurrentUser().password,
+        worldName: '',
+        isAdmin: false,
+        isPlaying: false
       };
       this.authService.updateLocalStorage(player);
       this.router.navigate(['/join']);

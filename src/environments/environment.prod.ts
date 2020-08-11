@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://ELB-746012067.us-east-1.elb.amazonaws.com:8080'
+  apiUrl: window["env"]["apiUrl"] || "default",
+  debug: window["env"]["debug"] || false
 };

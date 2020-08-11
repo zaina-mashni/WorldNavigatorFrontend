@@ -10,7 +10,8 @@ import {PlayerInterface} from '../interface/player.interface';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
+  submitted = false;
+  result = '';
   loginForm: FormGroup;
   constructor( private formBuilder: FormBuilder, private router: Router, private authService: AuthenticationService) {
     this.loginForm = this.formBuilder.group({
@@ -20,17 +21,21 @@ export class LoginComponent {
   }
 
   onLogin(name: string, pass: string) {
+    this.submitted = true;
     if (this.loginForm.invalid) {
+      this.result = 'Username and password can not be empty.';
       return;
     }
     this.authService.login(name, pass).subscribe(result => {
       console.log(JSON.stringify(result));
+      this.result = result.value;
       if (result.value === 'Authentication successful') {
         const player: PlayerInterface = {
           username: name,
           password: pass,
           worldName: '',
-          isAdmin: false
+          isAdmin: false,
+          isPlaying: false
         };
         this.authService.onLogin(player);
         this.router.navigate(['/join']);

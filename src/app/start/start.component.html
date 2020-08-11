@@ -1,61 +1,79 @@
-<div *ngIf="isAdmin==true && started==false">
-  you are admin
-  <button class="btn-primary btn" (click)="onStart()">Start</button>
+<div *ngIf="authService.getCurrentUser().isAdmin==true && authService.getCurrentUser().isPlaying==false && authService.getCurrentUser().worldName!=''">
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h3>Click the start button to start the game!</h3>
+      <br>
+      <button class="btn btn-wn" (click)="onStart()">Start</button>
+    </div>
+  </div>
+
 </div>
-<div *ngIf="isAdmin==false && started==false">
-  <h1>Wait for admin to start game!</h1>
+<div *ngIf="authService.getCurrentUser().isAdmin==false && authService.getCurrentUser().isPlaying==false && authService.getCurrentUser().worldName!=''">
+  <div class="container">
+    <div class="jumbotron text-center">
+      <h3>Waiting for admin to start the game</h3>
+      <app-loading></app-loading>
+      <br>
+      <button class="btn btn-wn-inverted-red" (click)="unJoin()">Leave Game</button>
+    </div>
+  </div>
 </div>
-<div *ngIf="started==true">
+<div *ngIf="authService.getCurrentUser().isPlaying==true || timeUp==true">
   <br><br>
-<div class="container">
-  <div class="row">
-    <h5 class="text-center">Inventory: {{inventory}}</h5>
-  </div>
-  <div class="row">
-    <h5 class="text-center">Facing Direction: {{facingDirection}}</h5>
-  </div>
-<div class="row">
-  <h5 class="text-center">Time Left: {{counter | formatTime}}</h5>
-</div>
-  <br>
-  <div class="row" style="height: 400px">
-    <div class="col-2"></div>
-    <div class="col-8 card" style="background-color: lightgrey; border-radius: 5px; border: lightgrey 1px solid">
-        <div class="card-img-overlay" style="margin: 0 !important;">
-          <p *ngFor="let command of commandList" style="margin-bottom: 0 !important;margin-block-start: 0 !important;: 0 !important;">
+  <div class="container">
+    <div class="row">
+      <h5 class="text-center">Inventory: {{inventory}} </h5>
+    </div>
+    <div class="row">
+      <h5 class="text-center">Facing Direction: {{facingDirection}}</h5>
+    </div>
+    <div class="row">
+      <h5 class="text-center">Time Left: {{counter | formatTime}}</h5>
+    </div>
+    <br>
+    <div class="row" style="height: 400px">
+      <div class="col-2"></div>
+      <div class="col-8 card" style="margin-top:0; background-color: #34393e; border-radius: 5px; border: 2px solid #829451;">
+        <div class="card-img-overlay" style="margin: 0 !important;  overflow-y: auto;">
+          <p *ngFor="let command of commandList"
+             style="font-size:10px; margin-bottom: 0 !important;margin-block-start: 0 !important;">
             {{command}}
           </p>
         </div>
+      </div>
+      <div class="col-2"></div>
     </div>
-    <div class="col-2"></div>
-  </div>
-  <br>
-  <div class="row">
-    <form [formGroup]="commandForm" (ngSubmit)="onCommand(command.value)">
-      <div class="input-group">
-      <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Command" name="command" #command formControlName="command">
-        <div class="input-group-append">
-          <button class="btn btn-primary" [disabled]="timeUp || !isPlaying">Execute</button>
+    <br>
+    <div class="row">
+      <form [formGroup]="commandForm" (ngSubmit)="onCommand(command.value)">
+        <div class="input-group">
+          <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="Command" name="command" #command
+                   formControlName="command">
+            <div class="input-group-append">
+              <button class="btn btn-wn" [disabled]="timeUp || !isPlaying">Execute</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <br>
+    <div class="row">
+      <div class="btn-group">
+        <button type="button" class="btn btn-wn-inverted-purple dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+          Available Commands
+        </button>
+        <div class="dropdown-menu">
+          <p class="dropdown-item">{{availableCommands}}</p>
         </div>
       </div>
-      </div>
-    </form>
-  </div>
-  <br>
-  <div class="row">
-    <div class="btn-group">
-      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Available Commands
-      </button>
-      <div class="dropdown-menu">
-        <p class="dropdown-item" >{{availableCommands}}</p>
-      </div>
     </div>
+    <br>
+    <div class="row">
+      <button (click)="onQuit()" [disabled]="!isPlaying" class="btn btn-wn-inverted-red">Quit Game</button>
+    </div>
+    <br>
+    <br>
   </div>
-  <br>
-  <div class="row">
-    <button (click)="onQuit()" [disabled]="!isPlaying" class="btn btn-danger">Quit Game</button>
-  </div>
-</div>
 </div>

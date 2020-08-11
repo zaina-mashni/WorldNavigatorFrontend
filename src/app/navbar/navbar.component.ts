@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {AuthenticationService} from '../service/authentication.service';
+import {GameService} from '../service/game.service';
 
 @Component({
   selector: 'app-navbar',
@@ -9,12 +10,13 @@ import {AuthenticationService} from '../service/authentication.service';
 export class NavbarComponent implements OnInit {
   isLoggedIn = false;
   isJoined = false;
-  constructor(private authService: AuthenticationService) {
+  constructor(private authService: AuthenticationService,
+              private gameService: GameService) {
     this.authService.getLoggedIn.subscribe(result => {
       this.isLoggedIn = result !== undefined;
-      if (this.isLoggedIn) {
-        this.isJoined = this.authService.getCurrentUser().worldName !== '';
-      }
+    });
+    this.gameService.getJoined.subscribe(result => {
+      this.isJoined = result !== '';
     });
   }
 

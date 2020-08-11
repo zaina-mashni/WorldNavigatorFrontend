@@ -6,6 +6,7 @@
         <div class="card-body">
           <form [formGroup]="createForm" (ngSubmit)="onCreate(worldName.value )">
             <div class="form-horizontal" >
+              <p *ngIf="submitted" style="color: #db524b; margin-left: 10px;">{{result}}</p>
               <div class="form-group">
                 <label for="worldName" class="col-12 ">World Name</label>
                 <div class="col-md-12">
@@ -16,15 +17,15 @@
               <div class="form-group">
                 <label class="col-md-12 ">Choose Map</label>
                 <div class="col-md-12">
-                  <div *ngFor="let map of mapFiles; let i = index">
+                  <div *ngFor="let map of mapFiles">
                     <label>
-                      <input type="radio" class="custom-radio" value="{{map}}" [(ngModel)]="mapFileChosen" name="mapFile" [checked]="i == 0" formControlName="mapFile">
+                      <input type="radio" class="custom-radio" value="{{map}}" [(ngModel)]="mapFileChosen" name="mapFile" formControlName="mapFile">
                       {{map}}
                     </label>
                   </div>
                 </div>
               </div>
-              <button class="btn btn-primary" >
+              <button class="btn btn-wn btn-center" >
                 Create
               </button>
             </div>

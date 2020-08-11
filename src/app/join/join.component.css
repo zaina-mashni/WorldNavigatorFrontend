@@ -1,8 +1,10 @@
 table{
   width: 100%;
 }
-
 .table-row{
   width:90%
+}
+hr{
+  border-top: 1px solid #495057
 }
 

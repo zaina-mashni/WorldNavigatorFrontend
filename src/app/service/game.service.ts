@@ -2,17 +2,18 @@ import {HttpClient} from '@angular/common/http';
 import {GameinfoInterface} from '../interface/gameinfo.interface';
 import {environment} from '../../environments/environment';
 import {AuthenticationService} from './authentication.service';
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable, Output} from '@angular/core';
 import {ReplyInterface} from '../interface/reply.interface';
 import {GameReplyInterface} from '../interface/gameReply.interface';
 import {MapFileInterface} from '../interface/mapFile.interface';
 import {CommandReplyInterface} from '../interface/commandReply.interface';
+import {PlayerInterface} from '../interface/player.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
-
+  @Output() getJoined: EventEmitter<string> = new EventEmitter();
   constructor(private http: HttpClient, private authService: AuthenticationService) {
   }
   listGames() {
@@ -23,15 +24,25 @@ export class GameService {
     return this.http.post<GameReplyInterface>(environment.apiUrl + '/api/game/list', JSON.stringify(request));
   }
 
-  joinGame(username: string , worldName: string){
+  joinGame(username: string , worldName: string) {
     const request = {
       username : username,
       worldName: worldName
     };
+    this.getJoined.emit(worldName);
     return this.http.post(environment.apiUrl + '/api/game/join', JSON.stringify(request));
   }
 
-  startGame(username: string, worldName: string){
+  unJoinGame(username: string , worldName: string) {
+    const request = {
+      username : username,
+      worldName: worldName
+    };
+    this.getJoined.emit('');
+    return this.http.post(environment.apiUrl + '/api/game/unjoin', JSON.stringify(request));
+  }
+
+  startGame(username: string, worldName: string) {
     const request = {
       username : username,
       worldName: worldName,
@@ -45,6 +56,7 @@ export class GameService {
       worldName: worldName,
       mapFile: mapFile
     };
+    this.getJoined.emit(worldName);
     return this.http.post(environment.apiUrl + '/api/game/create', JSON.stringify(request));
   }
 
@@ -69,6 +81,7 @@ export class GameService {
       username : username,
       worldName: worldName
     };
+    this.getJoined.emit('');
     return this.http.post<CommandReplyInterface>(environment.apiUrl + '/api/game/quit', JSON.stringify(request));
   }
 }

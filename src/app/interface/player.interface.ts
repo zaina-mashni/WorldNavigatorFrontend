@@ -3,4 +3,5 @@ export interface PlayerInterface {
   worldName: string;
   password: string;
   isAdmin: boolean;
+  isPlaying: boolean;
 }
