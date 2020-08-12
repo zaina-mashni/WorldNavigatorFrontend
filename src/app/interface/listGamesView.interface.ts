@@ -1,4 +1,4 @@
-export interface GameinfoInterface {
+export interface ListGamesViewInterface {
    worldName: string;
    playerCapacity: number;
    playersJoined: number;

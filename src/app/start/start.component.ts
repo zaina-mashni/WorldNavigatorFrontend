@@ -16,6 +16,7 @@ import {Router} from '@angular/router';
 })
 export class StartComponent implements OnInit {
   timeUp = false;
+  started = false;
   inventory = '';
   commandList: string[] = [];
   availableCommands = '';
@@ -48,8 +49,8 @@ export class StartComponent implements OnInit {
     const stompClient = Stomp.over(socket);
     stompClient.connect({}, (frame) => {
       stompClient.subscribe('/socket/start/' + this.authService.getCurrentUser().username, (result) => {
-        console.log('in subscription: ' + result.body);
         const response = JSON.parse(result.body);
+        this.started = true;
         this.inventory = response.inventory;
         this.availableCommands = response.availableCommands;
         this.facingDirection = response.facingDirection;
@@ -72,6 +73,9 @@ export class StartComponent implements OnInit {
           isPlaying: this.isPlaying
         };
         this.authService.updateLocalStorage(player);
+        if (this.isPlaying === false) {
+          this.gameService.getJoined.emit('');
+        }
       });
     });
   }
@@ -189,7 +193,7 @@ export class StartComponent implements OnInit {
   }
 
   unJoin() {
-    this.gameService.unJoinGame(this.authService.getCurrentUser().username,this.authService.getCurrentUser().worldName).subscribe(result => {
+    this.gameService.unJoinGame(this.authService.getCurrentUser().username, this.authService.getCurrentUser().worldName).subscribe(result => {
       console.log(result);
       const player: PlayerInterface = {
         username: this.authService.getCurrentUser().username,
@@ -199,6 +203,7 @@ export class StartComponent implements OnInit {
         isPlaying: false
       };
       this.authService.updateLocalStorage(player);
+      this.gameService.getJoined.emit('');
       this.router.navigate(['/join']);
     });
   }

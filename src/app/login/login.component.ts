@@ -27,9 +27,8 @@ export class LoginComponent {
       return;
     }
     this.authService.login(name, pass).subscribe(result => {
-      console.log(JSON.stringify(result));
       this.result = result.value;
-      if (result.value === 'Authentication successful') {
+      if (result.status === 'OK') {
         const player: PlayerInterface = {
           username: name,
           password: pass,
@@ -39,8 +38,6 @@ export class LoginComponent {
         };
         this.authService.onLogin(player);
         this.router.navigate(['/join']);
-      } else {
-        console.log('wrong username or password.');
       }
     });
   }

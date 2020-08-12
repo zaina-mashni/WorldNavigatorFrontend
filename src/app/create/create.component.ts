@@ -45,9 +45,8 @@ export class CreateComponent implements OnInit {
     }
     console.log(this.mapFileChosen);
     this.gameService.createGame(this.authService.getCurrentUser().username, worldName, this.mapFileChosen).subscribe(result => {
-      this.result = result.toString();
-      console.log(result);
-      if (result === 'World created successfully') {
+      this.result = result.value;
+      if (result.status === 'OK') {
         const player: PlayerInterface = {
           username: this.authService.getCurrentUser().username,
           password: this.authService.getCurrentUser().password,

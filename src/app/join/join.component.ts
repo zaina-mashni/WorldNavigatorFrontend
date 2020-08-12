@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {GameinfoInterface} from '../interface/gameinfo.interface';
+import {ListGamesViewInterface} from '../interface/listGamesView.interface';
 import {GameService} from '../service/game.service';
 import {AuthenticationService} from '../service/authentication.service';
 import {Router} from '@angular/router';
@@ -15,7 +15,9 @@ import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 export class JoinComponent implements OnInit {
   faUsers = faUsers;
   faUser = faUser;
-  gameInfo: GameinfoInterface[] = [];
+  gameInfo: ListGamesViewInterface[] = [];
+  result = '';
+  submitted = false;
   constructor(private gameService: GameService, private authService: AuthenticationService, private router: Router) {
     if (!authService.isLoggedIn()) {
       router.navigate(['/login']);
@@ -32,17 +34,20 @@ export class JoinComponent implements OnInit {
   }
 
   onJoin(worldName: string) {
+    this.submitted = true;
     this.gameService.joinGame(this.authService.getCurrentUser().username, worldName).subscribe(result => {
-      console.log(result);
-      const player: PlayerInterface = {
-        username: this.authService.getCurrentUser().username,
-        password: this.authService.getCurrentUser().password,
-        worldName: worldName,
-        isAdmin: false,
-        isPlaying: false
-      };
-      this.authService.updateLocalStorage(player);
-      this.router.navigate(['/start']);
+      this.result = result.value;
+      if (result.status === 'OK') {
+        const player: PlayerInterface = {
+          username: this.authService.getCurrentUser().username,
+          password: this.authService.getCurrentUser().password,
+          worldName: worldName,
+          isAdmin: false,
+          isPlaying: false
+        };
+        this.authService.updateLocalStorage(player);
+        this.router.navigate(['/start']);
+      }
     });
   }
 

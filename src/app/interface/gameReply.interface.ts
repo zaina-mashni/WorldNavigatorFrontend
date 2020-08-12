@@ -1,6 +1,10 @@
-import {GameinfoInterface} from './gameinfo.interface';
-
 export interface GameReplyInterface {
-  availableGames: GameinfoInterface[];
-
+  message: string;
+  facingDirection: string;
+  inventory: string;
+  timeLeftInMinutes: number;
+  availableCommands: string;
+  isPlaying: boolean;
+  isFighting: boolean;
+  status: string;
 }

@@ -5,6 +5,7 @@
         <p class="text-center" style="font-size: 28px; font-weight: bold; margin: 28px;">Join or Create a new world!</p>
         <div class="card-body">
           <table >
+            <p *ngIf="submitted" style="color: #db524b; margin-left: 10px;">{{result}}</p>
             <tbody>
             <tr *ngFor="let game of gameInfo; let i = index;">
               <td>

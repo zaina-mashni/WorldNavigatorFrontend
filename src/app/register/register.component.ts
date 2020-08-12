@@ -35,10 +35,8 @@ export class RegisterComponent implements OnInit {
     }
     this.authService.register(username, password).subscribe(result => {
       this.result = result.value;
-      if (result.value === 'Registration successful') {
+      if (result.status === 'OK') {
         this.router.navigate(['/login']);
-      } else {
-        console.log(result.value);
       }
     });
   }
