@@ -68,8 +68,8 @@ export class StartComponent implements OnInit {
         const player: PlayerInterface = {
           username: this.authService.getCurrentUser().username,
           password: this.authService.getCurrentUser().password,
-          worldName: this.authService.getCurrentUser().worldName,
-          isAdmin: this.authService.getCurrentUser().isAdmin,
+          worldName: response.worldName,
+          isAdmin: response.isAdmin,
           isPlaying: this.isPlaying
         };
         this.authService.updateLocalStorage(player);

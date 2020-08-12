@@ -7,4 +7,6 @@ export interface GameReplyInterface {
   isPlaying: boolean;
   isFighting: boolean;
   status: string;
+  worldName: string;
+  isAdmin: boolean;
 }
