@@ -22,7 +22,7 @@ export class AuthenticationService {
       username: username,
       password: password
     };
-    return this.http.post<DefaultReplyInterface>(environment.apiUrl + '/api/auth/login', JSON.stringify(request));
+    return this.http.post<DefaultReplyInterface>(environment.apiUrl + 'api/auth/login', JSON.stringify(request));
   }
 
   isLoggedIn(): boolean {
@@ -34,7 +34,7 @@ export class AuthenticationService {
       username: this.getCurrentUser().username,
       password: this.getCurrentUser().password
     };
-    this.http.post<DefaultReplyInterface>(environment.apiUrl + '/api/auth/logout', JSON.stringify(request)).subscribe(result => {
+    this.http.post<DefaultReplyInterface>(environment.apiUrl + 'api/auth/logout', JSON.stringify(request)).subscribe(result => {
         localStorage.removeItem('WorldNavigator');
         this.getLoggedIn.emit(undefined);
         this.router.navigate(['/login']);
@@ -62,7 +62,7 @@ export class AuthenticationService {
       username: username,
       password: password
     };
-    return this.http.post<DefaultReplyInterface>(environment.apiUrl + '/api/auth/register', JSON.stringify(request));
+    return this.http.post<DefaultReplyInterface>(environment.apiUrl + 'api/auth/register', JSON.stringify(request));
   }
 
 
